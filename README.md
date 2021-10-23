@@ -1,42 +1,77 @@
-# Advanced Sample Hardhat Project
+# Hardhat ERC20 token
+```
+Token Name - GIVERSChain
+Symbol - GIVERS
+Blockchain - Binance Smart Chain (BSC)
+Total Supply - 1,000,000,000
+```
+### Current project use the plug-in to verify on the bscscan
+### [*Verify Testnet Address*](https://testnet.bscscan.com/address/0x3F0fD66057f88bc0c98C62e65Ff355B91525e73F#code)
 
-This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
-
-The project comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts. It also comes with a variety of other tools, preconfigured to work with the project code.
-
-Try running some of the following tasks:
-
+### 1. Project init
 ```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-npx hardhat help
-REPORT_GAS=true npx hardhat test
-npx hardhat coverage
-npx hardhat run scripts/deploy.js
-node scripts/deploy.js
-npx eslint '**/*.js'
-npx eslint '**/*.js' --fix
-npx prettier '**/*.{json,sol,md}' --check
-npx prettier '**/*.{json,sol,md}' --write
-npx solhint 'contracts/**/*.sol'
-npx solhint 'contracts/**/*.sol' --fix
+npm init --yes
+
+npm install --save-dev hardhat
+
+npm install --save-dev @nomiclabs/hardhat-ethers ethers @nomiclabs/hardhat-waffle ethereum-waffle chai
 ```
 
-# Etherscan verification
+### 2. Write config
+Get the APIkey address under [bscScan](https://bscscan.com/myapikey) personal information.
 
-To try out Etherscan verification, you first need to deploy a contract to an Ethereum network that's supported by Etherscan, such as Ropsten.
+Create an `.env` file and add the `PRIVATE_KEY` and `BSCSCAN_API_KEY` in this file. We require these keys for configuring `hardhat.config.js` file.
 
-In this project, copy the .env.example file to a file named .env, and then edit it to fill in the details. Enter your Etherscan API key, your Ropsten node URL (eg from Alchemy), and the private key of the account which will send the deployment transaction. With a valid .env file in place, first deploy your contract:
+To interact with deployed protocols and test complex interactions locally use `forking` from mainnet.
+Recommend using Moralis BSCNetwork endpoints.
 
 ```shell
-hardhat run --network ropsten scripts/deploy.js
+https://speedy-nodes-nyc.moralis.io/1ed.....................c/bsc/mainnet
+```
+### 3. Testing contracts
+
+On your terminal run `npx hardhat test`. You should see the following output:
+```
+$ npx hardhat test
+
+  Token contract
+    ✓ Total supply equal to what you set (654ms)
+    .....
+
+
+  .. passing (...ms)
 ```
 
-Then, copy the deployment address and paste it in to replace `DEPLOYED_CONTRACT_ADDRESS` in this command:
+### 4. Debugging with Hardhat Network
 
-```shell
-npx hardhat verify --network ropsten DEPLOYED_CONTRACT_ADDRESS "Hello, Hardhat!"
+When running your contracts and tests on Hardhat Network you can print logging messages and contract variables calling `console.log()` from your Solidity code. To use it you have to `import "hardhat/console.sol";`
+
+### 5. Deploying to a live network
+
+To indicate Hardhat to connect to a  BSC testnet network when running any tasks, you can use the --network parameter. Like this:
+
+```shell 
+npx hardhat run scripts/deploy.js --network testnet 
+```
+To fix: “Gas estimation error" use right router address of Pancakeswap:
+
+If you are on `testnet` use this: 0xD99D1c33F9fC3444f8101754aBC46c52416550D1
+
+If you are on `mainnet` use this: 0x10ED43C718714eb63d5aA57B78B54704E256024E
+
+### 6. Verify with Hardhat
+
+Install the plugin
+```
+npm install --save-dev @nomiclabs/hardhat-etherscan
+```
+Configure the plugin in hardhat.config.js
+```
+Add require("@nomiclabs/hardhat-etherscan");
+Add Bscscan API key
+```
+
+Run the following command:
+```
+npx hardhat verify --network testnet DEPLOYED_CONTRACT_ADDRESS "Constructor argument 1"
 ```
