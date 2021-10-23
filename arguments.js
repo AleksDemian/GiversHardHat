@@ -1,0 +1,4 @@
+module.exports = [
+    "0xa0f958bcf4883e3737cc5564e448648389a5be24",
+    "0x25f418fe7569f141aedbb37c4d1c063061c5e244",
+];
